@@ -12,7 +12,7 @@ To start the node server (distributing the rest interface) call `node ./api/app.
 
 ## Usage
 ```
-http://api.regensbuger-forscher.de/mensa/uni/{{day}}
+http://{{server url}}/mensa/uni/{{day}}
 {{day}}: mo || di || mi || do || fr
 Speiseplan für Montag der aktuellen Woche: http://api.regensburger-forscher.de/mensa/uni/mo
 ```
