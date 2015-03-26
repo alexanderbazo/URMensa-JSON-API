@@ -16,8 +16,9 @@ var URMDatabase = function (newDownloader) {
 
         update = function () {
             console.log("updating");
-            var weekNumber = (new Date()).getWeek();
-            downloader.get("www.stwno.de", "/infomax/daten-extern/csv/UNI-R/" + weekNumber + ".csv", function (data) {
+            var stwnoWeekNumber = (new Date()).getWeek() - 1,
+                timestamp = parseInt(Date.now() / 1000);
+            downloader.get("www.stwno.de", "/infomax/daten-extern/csv/UNI-R/" + stwnoWeekNumber + ".csv?t=" + timestamp, function (data) {
                 menu = data;
                 initVotes();
             });
