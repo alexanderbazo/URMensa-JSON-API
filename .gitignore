@@ -3,6 +3,7 @@
 demo/
 node_modules/
 api/node_modules
+api/data/*
 
 # Compiled source #
 ###################
