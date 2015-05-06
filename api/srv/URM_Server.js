@@ -20,23 +20,17 @@ var URMServer = function (newMsgFactory) {
 
         init = function () {
             var express = require("express"),
-                //cors = require("cors"),
+                cors = require("cors"),
                 bodyParser = require("body-parser");
             server = express();
-            //server.use(cors());
+            server.use(cors());
             server.use(bodyParser.json({
                 strict: false
             }));
+
             server.use(bodyParser.urlencoded({
                 extended: true
             }));
-
-            server.all("/", function (req, res, next) {
-                res.header("Access-Control-Allow-Origin", "*");
-                res.header("Access-Control-Allow-Headers", "X-Requested-With");
-                next();
-            });
-
 
             server.get("/mensa", function (req, res) {
                 res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
