@@ -1,13 +1,37 @@
 "use strict";
 /*eslint-env node */
-var URMServer = function (newMsgFactory) {
+var URMServer = function (newMsgFactory, newEmailClient) {
     var msgFactory = newMsgFactory,
         server,
+        emailClient = newEmailClient,
         db,
         keys,
 
         loadKeys = function () {
             keys = require("../data/keys");
+        },
+
+        saveKeys = function () {
+            var fs = require("fs");
+            fs.writeFile("./data/keys.json", JSON.stringify(keys));
+        },
+
+        getNewKey = function (email) {
+            var uuid = require("node-uuid");
+            var validator = require("validator");
+            var key = uuid.v1(),
+                result;
+            if (validator.isEmail(email)) {
+                keys[key] = {
+                    "email": email
+                };
+                saveKeys();
+                emailClient.send("MI Mensa Service", email, "Requested API-Key", "Your API-Key: " + key);
+                result = msgFactory.getMessage("API key send to: " + email);
+            } else {
+                result = msgFactory.getErrorMessage("invalid email");
+            }
+            return result;
         },
 
         validateApiKey = function (key) {
@@ -61,6 +85,14 @@ var URMServer = function (newMsgFactory) {
                     menu = db.getMenuForDay(day);
                 res.send(JSON.stringify(menu));
             });
+
+            server.get("/mensa/get/key/*", function (req, res) {
+                var email = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
+                    result = getNewKey(email);
+                res.send(JSON.stringify(result));
+            });
+
+
         },
 
         start = function (port, database) {

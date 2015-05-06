@@ -19,6 +19,12 @@
                         fs.writeSync(fd, "{}");
                         done();
                     }
+                },
+                "email": {
+                    "api/data/email.json": function (fs, fd, done) {
+                        fs.writeSync(fd, "{\"user\": \"EMAIL\",\"pass\": \"PASSWORD\", \"service\": \"gmail\"}");
+                        done();
+                    }
                 }
             },
             "copy": {
@@ -39,6 +45,6 @@
         grunt.loadNpmTasks("grunt-contrib-copy");
         grunt.loadNpmTasks("grunt-file-creator");
         // tasks
-        grunt.registerTask("default", ["npm-install:express:cors:body-parser:http:iconv-lite:csvtojson:node-schedule", "eslint", "file-creator", "copy"]);
+        grunt.registerTask("default", ["npm-install:express:cors:body-parser:http:iconv-lite:csvtojson:node-schedule:node-uuid:validator:nodemailer:nodemailer-smtp-transport", "eslint", "file-creator", "copy"]);
     };
 }());

@@ -8,7 +8,7 @@ var URMDatabase = function (newDownloader) {
 
         save = function () {
             var fs = require("fs");
-            fs.writeFile("data/votes.json", JSON.stringify(votes));
+            fs.writeFile("./data/votes.json", JSON.stringify(votes));
         },
 
         initVotes = function () {
