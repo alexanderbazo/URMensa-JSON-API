@@ -62,7 +62,7 @@ var URMServer = function (newMsgFactory, newEmailClient) {
                 res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
             });
 
-            server.get("/mensa/uni/upvote/*", function (req, res) {
+            server.post("/mensa/uni/upvote/*", function (req, res) {
                 var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
                     result = msgFactory.getErrorMessage("error [upvote item " + id + "]");
                 result = db.upvoteElement(parseInt(id));
