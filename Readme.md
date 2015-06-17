@@ -4,11 +4,11 @@ Das Studentenwerk Niederbayer/Oberpfalz stellt den Speiseplan der Uni Mensa als 
 
 ## Build
 
-Run `grunt` to install dependencies. All required node modules are copied to `api/node_modules`.
+Run `npm install && grunt` to install dependencies and build the library. All required node modules are copied to `api/node_modules`.
 
 ## Run
 
-To start the node server (distributing the rest interface) call `node ./api/app.js`
+To start the node server (distributing the rest interface) run `node ./api/app.js`
 
 ## Usage
 ```
@@ -30,7 +30,10 @@ Speiseplan für Montag der aktuellen Woche: http://api.regensburger-forscher.de/
                         "students":"0,60",
                         "employees":"0,80",
                         "guests":"1,30"
-                    }
+                    },
+                "id": 50,
+                "upvotes": 7,
+                "downvotes": 2
             },
 
             {
@@ -43,9 +46,12 @@ Speiseplan für Montag der aktuellen Woche: http://api.regensburger-forscher.de/
                         "students":"1,90",
                         "employees":"2,70",
                         "guests":"3,50"
-                    }
-            },
+                    },
 
-        ... ]
+                "id": 12,
+                "upvotes": 12,
+                "downvotes": 1
+            },
+ ... ]
 
 ```
