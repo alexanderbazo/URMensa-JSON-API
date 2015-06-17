@@ -77,12 +77,12 @@ var URMServer = function (newMsgFactory, newEmailClient) {
              server.post("/mensa/uni/downvote/*", function (req, res) {
                  var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
                      /*apiUser = validateApiKey(req.body.key),*/
-                     result = msgFactory.getErrorMessage("error while donvoting item " + id);
+                     result = msgFactory.getErrorMessage("error while donwvoting item " + id);
                      /*
                  if (apiUser !== undefined) {
                      result = db.downvoteElement(parseInt(id));
                  }*/
-                 db.downvoteElement(parseInt(id));
+                 result = db.downvoteElement(parseInt(id));
                  res.send(JSON.stringify(result));
              });
 
