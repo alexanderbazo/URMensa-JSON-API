@@ -34,7 +34,6 @@ var URMServer = function (newMsgFactory, newEmailClient) {
             return result;
         },
 
-        /*
         validateApiKey = function (key) {
             if (keys.hasOwnProperty(key)) {
                 return keys[key];
@@ -42,7 +41,6 @@ var URMServer = function (newMsgFactory, newEmailClient) {
                 return undefined;
             }
         },
-        */
 
         init = function () {
             var express = require("express"),
@@ -62,19 +60,27 @@ var URMServer = function (newMsgFactory, newEmailClient) {
                 res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
             });
 
-            server.post("/mensa/uni/upvote/*", function (req, res) {
-                var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                    result = msgFactory.getErrorMessage("error [upvote item " + id + "]");
-                result = db.upvoteElement(parseInt(id));
-                res.send(JSON.stringify(result));
-            });
+             server.post("/mensa/uni/upvote/*", function (req, res) {
+                 var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
+                     apiUser = validateApiKey(req.body.key),
+                     result = msgFactory.getErrorMessage("invalid api key");
+                console.log(req.body);
+                 if (apiUser !== undefined) {
+                     result = db.upvoteElement(parseInt(id));
+                 }
+                 res.send(JSON.stringify(result));
+             });
 
-            server.post("/mensa/uni/downvote/*", function (req, res) {
-                var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                     result = msgFactory.getErrorMessage("error [downvote item " + id + "]");
-                result = db.downvoteElement(parseInt(id));
-                res.send(JSON.stringify(result));
-            });
+             server.post("/mensa/uni/downvote/*", function (req, res) {
+                 var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
+                     apiUser = validateApiKey(req.body.key),
+                     result = msgFactory.getErrorMessage("invalid api key");
+                console.log(req.body);
+                 if (apiUser !== undefined) {
+                     result = db.downvoteElement(parseInt(id));
+                 }
+                 res.send(JSON.stringify(result));
+             });
 
             server.get("/mensa/uni/*", function (req, res) {
                 var day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
