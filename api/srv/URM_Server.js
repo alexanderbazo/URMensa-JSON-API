@@ -34,13 +34,14 @@ var URMServer = function (newMsgFactory, newEmailClient) {
             return result;
         },
 
+        /*
         validateApiKey = function (key) {
             if (keys.hasOwnProperty(key)) {
                 return keys[key];
             } else {
                 return undefined;
             }
-        },
+        },*/
 
         init = function () {
             var express = require("express"),
@@ -62,23 +63,26 @@ var URMServer = function (newMsgFactory, newEmailClient) {
 
              server.post("/mensa/uni/upvote/*", function (req, res) {
                  var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                     apiUser = validateApiKey(req.body.key),
-                     result = msgFactory.getErrorMessage("invalid api key");
-                console.log(req.body);
+                    /*
+                     apiUser = validateApiKey(req.body.key)*/
+                     result = msgFactory.getErrorMessage("error while upvoting item " + id);
+                     /*
                  if (apiUser !== undefined) {
                      result = db.upvoteElement(parseInt(id));
-                 }
-                 res.send(JSON.stringify(result));
+                 }*/
+                 result = db.upvoteElement(parseInt(id));
+                res.send(JSON.stringify(result));
              });
 
              server.post("/mensa/uni/downvote/*", function (req, res) {
                  var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                     apiUser = validateApiKey(req.body.key),
-                     result = msgFactory.getErrorMessage("invalid api key");
-                console.log(req.body);
+                     /*apiUser = validateApiKey(req.body.key),*/
+                     result = msgFactory.getErrorMessage("error while donvoting item " + id);
+                     /*
                  if (apiUser !== undefined) {
                      result = db.downvoteElement(parseInt(id));
-                 }
+                 }*/
+                 db.downvoteElement(parseInt(id));
                  res.send(JSON.stringify(result));
              });
 
