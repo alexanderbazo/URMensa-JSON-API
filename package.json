@@ -9,5 +9,8 @@
     "grunt-eslint": "^8.0.0",
     "grunt-file-creator": "^0.1.2",
     "grunt-npm-install": "^0.2.0"
+  },
+  "dependencies": {
+    "sleep": "^2.0.0"
   }
 }

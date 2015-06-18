@@ -13,7 +13,7 @@ var msgFactory = new URMMessageGenerator.MessageGenerator();
 var emailClient = new URMEmailClient.EmailClient();
 var downloader = new URMDownloader.Downloader();
 var database = new URMDatabase.Database(downloader);
-var server = new URMServer.Server(msgFactory, emailClient);
+var server = new URMServer.Server(msgFactory, emailClient, 500000);
 
 schedule.scheduleJob("0 0 * * *", database.update);
 database.update();

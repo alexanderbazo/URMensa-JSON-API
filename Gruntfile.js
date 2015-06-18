@@ -45,6 +45,6 @@
         grunt.loadNpmTasks("grunt-contrib-copy");
         grunt.loadNpmTasks("grunt-file-creator");
         // tasks
-        grunt.registerTask("default", ["npm-install:express:cors:body-parser:http:iconv-lite:csvtojson:node-schedule:node-uuid:validator:nodemailer:nodemailer-smtp-transport", "eslint", "file-creator", "copy"]);
+        grunt.registerTask("default", ["npm-install:express:cors:body-parser:http:iconv-lite:csvtojson:node-schedule:node-uuid:validator:nodemailer:nodemailer-smtp-transport:sleep", "eslint", "file-creator", "copy"]);
     };
 }());

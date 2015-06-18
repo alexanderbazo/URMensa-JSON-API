@@ -1,6 +1,7 @@
 "use strict";
 /*eslint-env node */
-var URMServer = function (newMsgFactory, newEmailClient) {
+var URMServer = function (newMsgFactory, newEmailClient, responseDelayinMicroSeconds) {
+    var sleep = require("sleep");
     var msgFactory = newMsgFactory,
         server,
         emailClient = newEmailClient,
@@ -61,7 +62,7 @@ var URMServer = function (newMsgFactory, newEmailClient) {
                 res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
             });
 
-             server.post("/mensa/uni/upvote/*", function (req, res) {
+            server.post("/mensa/uni/upvote/*", function (req, res) {
                  var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
                     /*
                      apiUser = validateApiKey(req.body.key)*/
@@ -70,9 +71,13 @@ var URMServer = function (newMsgFactory, newEmailClient) {
                  if (apiUser !== undefined) {
                      result = db.upvoteElement(parseInt(id));
                  }*/
-                 result = db.upvoteElement(parseInt(id));
+
+                result = db.upvoteElement(parseInt(id));
+                if(responseDelayinMicroSeconds) {
+                    sleep.usleep(responseDelayinMicroSeconds);
+                }
                 res.send(JSON.stringify(result));
-             });
+            });
 
              server.post("/mensa/uni/downvote/*", function (req, res) {
                  var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
@@ -82,13 +87,19 @@ var URMServer = function (newMsgFactory, newEmailClient) {
                  if (apiUser !== undefined) {
                      result = db.downvoteElement(parseInt(id));
                  }*/
-                 result = db.downvoteElement(parseInt(id));
-                 res.send(JSON.stringify(result));
+                result = db.downvoteElement(parseInt(id));
+                if(responseDelayinMicroSeconds) {
+                    sleep.usleep(responseDelayinMicroSeconds);
+                }
+                res.send(JSON.stringify(result));
              });
 
             server.get("/mensa/uni/*", function (req, res) {
                 var day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
                     menu = db.getMenuForDay(day);
+                if(responseDelayinMicroSeconds) {
+                    sleep.usleep(responseDelayinMicroSeconds);
+                }
                 res.send(JSON.stringify(menu));
             });
 
