@@ -1,6 +1,7 @@
-"use strict";
-/*eslint-env node */
 var URMServer = function(newMsgFactory, responseDelayinMicroSeconds) {
+    "use strict";
+    /*eslint-env node */
+
     var sleep = require("sleep");
     var msgFactory = newMsgFactory,
         app,

@@ -1,7 +1,7 @@
-"use strict";
-/*eslint-env node */
-
 var URMDatabase = function(newDownloader) {
+    "use strict";
+    /*eslint-env node */
+
     var downloader = newDownloader,
         menu = [],
         votes = {};

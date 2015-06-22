@@ -1,7 +1,7 @@
-"use strict";
-/*eslint-env node */
-
 var URMMessageGenerator = function() {
+    "use strict";
+    /*eslint-env node */
+
     function getErrorMessage(msg, data) {
         var result = {
             status: "error",

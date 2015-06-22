@@ -1,7 +1,7 @@
-"use strict";
-/*eslint-env node */
-
 var URMDownloader = function() {
+    "use strict";
+    /*eslint-env node */
+
     var Http = require("http"),
         Iconv = require("iconv-lite"),
         Converter = require("csvtojson").core.Converter;
