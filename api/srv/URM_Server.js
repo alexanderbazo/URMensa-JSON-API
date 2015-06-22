@@ -1,124 +1,68 @@
 "use strict";
 /*eslint-env node */
-var URMServer = function (newMsgFactory, newEmailClient, responseDelayinMicroSeconds) {
+var URMServer = function(newMsgFactory, responseDelayinMicroSeconds) {
     var sleep = require("sleep");
     var msgFactory = newMsgFactory,
-        server,
-        emailClient = newEmailClient,
-        db,
-        keys,
+        app,
+        /*eslint-disable */
+        server, 
+        /*eslint-enable */
+        db;
 
-        loadKeys = function () {
-            keys = require("../data/keys");
-        },
+    function init() {
+        var express = require("express"),
+            cors = require("cors"),
+            bodyParser = require("body-parser");
+        app = express();
+        app.use(cors());
+        app.use(bodyParser.json({
+            strict: false
+        }));
 
-        saveKeys = function () {
-            var fs = require("fs");
-            fs.writeFile("./data/keys.json", JSON.stringify(keys));
-        },
+        app.use(bodyParser.urlencoded({
+            extended: true
+        }));
 
-        getNewKey = function (email) {
-            var uuid = require("node-uuid");
-            var validator = require("validator");
-            var key = uuid.v1(),
-                result;
-            if (validator.isEmail(email)) {
-                keys[key] = {
-                    "email": email
-                };
-                saveKeys();
-                emailClient.send("MI Mensa Service", email, "Requested API-Key", "Your API-Key: " + key);
-                result = msgFactory.getMessage("API key send to: " + email);
-            } else {
-                result = msgFactory.getErrorMessage("invalid email");
+        app.get("/mensa", function(req, res) {
+            res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
+        });
+
+        app.post("/mensa/uni/upvote/*", function(req, res) {
+            var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
+                result = msgFactory.getErrorMessage("error while upvoting item " + id);
+            result = db.upvoteElement(parseInt(id));
+            if (responseDelayinMicroSeconds) {
+                sleep.usleep(responseDelayinMicroSeconds);
             }
-            return result;
-        },
+            res.send(JSON.stringify(result));
+        });
 
-        /*
-        validateApiKey = function (key) {
-            if (keys.hasOwnProperty(key)) {
-                return keys[key];
-            } else {
-                return undefined;
+        app.post("/mensa/uni/downvote/*", function(req, res) {
+            var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
+                result = msgFactory.getErrorMessage("error while donwvoting item " + id);
+            result = db.downvoteElement(parseInt(id));
+            if (responseDelayinMicroSeconds) {
+                sleep.usleep(responseDelayinMicroSeconds);
             }
-        },*/
+            res.send(JSON.stringify(result));
+        });
 
-        init = function () {
-            var express = require("express"),
-                cors = require("cors"),
-                bodyParser = require("body-parser");
-            server = express();
-            server.use(cors());
-            server.use(bodyParser.json({
-                strict: false
-            }));
+        app.get("/mensa/uni/*", function(req, res) {
+            var day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
+                menu = db.getMenuForDay(day);
+            if (responseDelayinMicroSeconds) {
+                sleep.usleep(responseDelayinMicroSeconds);
+            }
+            res.send(JSON.stringify(menu));
+        });
+    }
 
-            server.use(bodyParser.urlencoded({
-                extended: true
-            }));
+    function start(port, database) {
+        db = database;
+        server = app.listen(port);
+    }
 
-            server.get("/mensa", function (req, res) {
-                res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
-            });
-
-            server.post("/mensa/uni/upvote/*", function (req, res) {
-                 var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                    /*
-                     apiUser = validateApiKey(req.body.key)*/
-                     result = msgFactory.getErrorMessage("error while upvoting item " + id);
-                     /*
-                 if (apiUser !== undefined) {
-                     result = db.upvoteElement(parseInt(id));
-                 }*/
-
-                result = db.upvoteElement(parseInt(id));
-                if(responseDelayinMicroSeconds) {
-                    sleep.usleep(responseDelayinMicroSeconds);
-                }
-                res.send(JSON.stringify(result));
-            });
-
-             server.post("/mensa/uni/downvote/*", function (req, res) {
-                 var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                     /*apiUser = validateApiKey(req.body.key),*/
-                     result = msgFactory.getErrorMessage("error while donwvoting item " + id);
-                     /*
-                 if (apiUser !== undefined) {
-                     result = db.downvoteElement(parseInt(id));
-                 }*/
-                result = db.downvoteElement(parseInt(id));
-                if(responseDelayinMicroSeconds) {
-                    sleep.usleep(responseDelayinMicroSeconds);
-                }
-                res.send(JSON.stringify(result));
-             });
-
-            server.get("/mensa/uni/*", function (req, res) {
-                var day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                    menu = db.getMenuForDay(day);
-                if(responseDelayinMicroSeconds) {
-                    sleep.usleep(responseDelayinMicroSeconds);
-                }
-                res.send(JSON.stringify(menu));
-            });
-
-            server.get("/mensa/get/key/*", function (req, res) {
-                var email = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                    result = getNewKey(email);
-                res.send(JSON.stringify(result));
-            });
-
-
-        },
-
-        start = function (port, database) {
-            db = database;
-            loadKeys();
-            server.listen(port);
-        },
-
-        stop = function () {};
+    function stop() {}
 
     init();
 
@@ -127,6 +71,5 @@ var URMServer = function (newMsgFactory, newEmailClient, responseDelayinMicroSec
         stop: stop
     };
 };
-
 
 exports.Server = URMServer;
