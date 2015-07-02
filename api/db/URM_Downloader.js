@@ -1,23 +1,23 @@
-var URMDownloader = function() {
+var URMDownloader = function () {
     "use strict";
     /*eslint-env node */
 
     var Http = require("http"),
         Iconv = require("iconv-lite"),
-        Converter = require("csvtojson").core.Converter;
+        Converter = require("csvtojson").Converter;
 
     function parseData(callback, res) {
         var lines = "";
-        res.on("data", function(data) {
+        res.on("data", function (data) {
             var utf8String = Iconv.decode(new Buffer(data), "ISO-8859-1");
             lines = lines.concat(utf8String);
         });
-        res.on("end", function() {
+        res.on("end", function () {
             var csvConverter = new Converter({
                 delimiter: ";",
                 constructResult: true
             });
-            csvConverter.on("end_parsed", function(jsonObj) {
+            csvConverter.on("end_parsed", function (jsonObj) {
                 var items = jsonObj;
                 for (var i = 0; i < items.length; i += 1) {
                     var item = items[i];

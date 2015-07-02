@@ -1,4 +1,4 @@
-var URMServer = function(newMsgFactory, responseDelayinMicroSeconds) {
+var URMServer = function (newMsgFactory, responseDelayinMicroSeconds) {
     "use strict";
     /*eslint-env node */
 
@@ -6,7 +6,7 @@ var URMServer = function(newMsgFactory, responseDelayinMicroSeconds) {
     var msgFactory = newMsgFactory,
         app,
         /*eslint-disable */
-        server, 
+        server,
         /*eslint-enable */
         db;
 
@@ -24,11 +24,11 @@ var URMServer = function(newMsgFactory, responseDelayinMicroSeconds) {
             extended: true
         }));
 
-        app.get("/mensa", function(req, res) {
+        app.get("/mensa", function (req, res) {
             res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
         });
 
-        app.post("/mensa/uni/upvote/*", function(req, res) {
+        app.all("/mensa/uni/upvote/*", function (req, res) {
             var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
                 result = msgFactory.getErrorMessage("error while upvoting item " + id);
             result = db.upvoteElement(parseInt(id));
@@ -38,7 +38,7 @@ var URMServer = function(newMsgFactory, responseDelayinMicroSeconds) {
             res.send(JSON.stringify(result));
         });
 
-        app.post("/mensa/uni/downvote/*", function(req, res) {
+        app.all("/mensa/uni/downvote/*", function (req, res) {
             var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
                 result = msgFactory.getErrorMessage("error while donwvoting item " + id);
             result = db.downvoteElement(parseInt(id));
@@ -48,7 +48,7 @@ var URMServer = function(newMsgFactory, responseDelayinMicroSeconds) {
             res.send(JSON.stringify(result));
         });
 
-        app.get("/mensa/uni/*", function(req, res) {
+        app.get("/mensa/uni/*", function (req, res) {
             var day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
                 menu = db.getMenuForDay(day);
             if (responseDelayinMicroSeconds) {

@@ -17,13 +17,11 @@
             },
             "copy": {
                 main: {
-                    files: [
-                        {
-                            expand: true,
-                            src: ["node_modules/*"],
-                            dest: "api/"
-                        }
-                    ]
+                    files: [{
+                        expand: true,
+                        src: ["node_modules/*"],
+                        dest: "api/"
+                    }]
                 }
             }
         });
@@ -33,6 +31,6 @@
         grunt.loadNpmTasks("grunt-contrib-copy");
         grunt.loadNpmTasks("grunt-file-creator");
         // tasks
-        grunt.registerTask("default", ["npm-install:express:cors:body-parser:http:iconv-lite:csvtojson:node-schedule:node-uuid:validator:sleep", "eslint", "file-creator", "copy"]);
+        grunt.registerTask("default", ["npm-install:express:cors:body-parser:csvtojson:http:iconv-lite:csvtojson:node-schedule:node-uuid:validator:sleep", "eslint", "file-creator", "copy"]);
     };
 }());
