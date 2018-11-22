@@ -1,76 +1,73 @@
-var URMServer = function (newMsgFactory, responseDelayinMicroSeconds) {
-    "use strict";
-    /*eslint-env node */
+/*eslint-env node */
+"use strict";
 
-    var sleep = require("sleep");
-    var msgFactory = newMsgFactory,
-        app,
-        /*eslint-disable */
-        server,
-        /*eslint-enable */
-        db;
+var URMServer = function(newMsgFactory) {
 
-    function init() {
-        var express = require("express"),
-            cors = require("cors"),
-            bodyParser = require("body-parser");
-        app = express();
-        app.use(cors());
-        app.use(bodyParser.json({
-            strict: false
-        }));
+  var msgFactory = newMsgFactory,
+    app,
+    server,
+    db;
 
-        app.use(bodyParser.urlencoded({
-            extended: true
-        }));
+  function init() {
+    let express = require("express"),
+      cors = require("cors"),
+      bodyParser = require("body-parser");
+    app = express();
+    app.use(cors());
+    app.use(bodyParser.json({
+      strict: false,
+    }));
 
-        app.get("/mensa", function (req, res) {
-            res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
-        });
+    app.use(bodyParser.urlencoded({
+      extended: true,
+    }));
 
-        app.all("/mensa/uni/upvote/*", function (req, res) {
-            var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                result = msgFactory.getErrorMessage("error while upvoting item " + id);
-            result = db.upvoteElement(parseInt(id));
-            if (responseDelayinMicroSeconds) {
-                sleep.usleep(responseDelayinMicroSeconds);
-            }
-            res.send(JSON.stringify(result));
-        });
+    app.get("/mensa", function(req, res) {
+      res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
+    });
 
-        app.all("/mensa/uni/downvote/*", function (req, res) {
-            var id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                result = msgFactory.getErrorMessage("error while donwvoting item " + id);
-            result = db.downvoteElement(parseInt(id));
-            if (responseDelayinMicroSeconds) {
-                sleep.usleep(responseDelayinMicroSeconds);
-            }
-            res.send(JSON.stringify(result));
-        });
+    app.all("/mensa/uni/upvote/*", function(req, res) {
+      let id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") +
+          1, req.originalUrl.length),
+        result = msgFactory.getErrorMessage("error while upvoting item " +
+          id);
+      result = db.upvoteElement(parseInt(id));
+      res.send(JSON.stringify(result));
+    });
 
-        app.get("/mensa/uni/*", function (req, res) {
-            var day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
-                menu = db.getMenuForDay(day);
-            if (responseDelayinMicroSeconds) {
-                sleep.usleep(responseDelayinMicroSeconds);
-            }
-            res.send(JSON.stringify(menu));
-        });
-    }
+    app.all("/mensa/uni/downvote/*", function(req, res) {
+      let id = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") +
+          1, req.originalUrl.length),
+        result = msgFactory.getErrorMessage(
+          "error while donwvoting item " + id);
+      result = db.downvoteElement(parseInt(id));
+      res.send(JSON.stringify(result));
+    });
 
-    function start(port, database) {
-        db = database;
-        server = app.listen(port);
-    }
+    app.get("/mensa/uni/*", function(req, res) {
+      let day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") +
+          1, req.originalUrl.length),
+        menu = db.getMenuForDay(day);
+      res.send(JSON.stringify(menu));
+    });
+  }
 
-    function stop() {}
+  function start(port, database) {
+    let fs = require("fs"),
+      https = require("https");
+    db = database;
+    server = https.createServer({
+      key: fs.readFileSync("./certs/server.key"),
+      cert: fs.readFileSync("./certs/server.cert"),
+    }, app);
+    server.listen(port);
+  }
 
-    init();
+  init();
 
-    return {
-        start: start,
-        stop: stop
-    };
+  return {
+    start: start,
+  };
 };
 
 exports.Server = URMServer;

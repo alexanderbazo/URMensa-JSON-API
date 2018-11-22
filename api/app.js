@@ -1,27 +1,29 @@
-(function(responseDelay) {
-    "use strict";
-    /*eslint-env node */
-    require("./helper/URM_Helper");
+/*eslint-env node */
+"use strict";
 
-    var URMMessageGenerator = require("./helper/URM_MessageGenerator");
-    var URMDatabase = require("./db/URM_Database");
-    var URMDownloader = require("./db/URM_Downloader");
-    var URMServer = require("./srv/URM_Server");
-    var schedule = require("node-schedule");
+(function() {
 
-    var msgFactory = new URMMessageGenerator.MessageGenerator();
-    var downloader = new URMDownloader.Downloader();
-    var database = new URMDatabase.Database(downloader);
-    var server = new URMServer.Server(msgFactory, responseDelay);
+  const Config = require("../config.json"), 
+    schedule = require("node-schedule"),
+    URMHelper = require("./helper/URM_Helper"),
+    URMMessageGenerator = require("./helper/URM_MessageGenerator"),
+    URMDatabase = require("./db/URM_Database"),
+    URMDownloader = require("./db/URM_Downloader"),
+    URMServer = require("./srv/URM_Server");
 
-    function run() {
-        schedule.scheduleJob("0 0 * * *", database.update);
-        database.update();
-        server.start(9001, database);
-    }
+  let msgFactory = new URMMessageGenerator.MessageGenerator(),
+    downloader = new URMDownloader.Downloader(),
+    database = new URMDatabase.Database(downloader, Config),
+    server = new URMServer.Server(msgFactory);
 
-    return {
-        run: run
-    };
+  function run() {
+    schedule.scheduleJob(Config.Schedule, database.update);
+    database.update();
+    server.start(Config.Port, database);
+  }
 
-}().run(500000));
+  return {
+    run: run,
+  };
+
+}().run());
