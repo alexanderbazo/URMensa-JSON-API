@@ -14,7 +14,7 @@ To start the node server (distributing the rest interface) run `node ./api/app.j
 ```
 http://{{server url}}/mensa/uni/{{day}}
 {{day}}: mo || di || mi || do || fr
-Speiseplan für Montag der aktuellen Woche: http://api.regensburger-forscher.de/mensa/uni/mo
+Speiseplan für Montag der aktuellen Woche:https://regensburger-forscher.de:9001/mensa/uni/mo
 ```
 
 ## Response
