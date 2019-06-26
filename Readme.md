@@ -4,11 +4,13 @@ Das Studentenwerk Niederbayer/Oberpfalz stellt den Speiseplan der Uni Mensa als 
 
 ## Build
 
-Run `npm install && grunt` to install dependencies and build the library. All required node modules are copied to `api/node_modules`.
+Run `npm install` to install dependencies and prepare the data folder. All required node modules are copied to `api/node_modules`.
+
+Run `npm run create-certs` to create SSL certificates to serve the API via HTTPS. `openssl` has to be installed on the host machine.
 
 ## Run
 
-To start the node server (distributing the rest interface) run `node ./api/app.js`
+To start the node server (distributing the rest interface) run `npm start`
 
 ## Usage
 ```
