@@ -6,10 +6,8 @@ var URMDownloader = function() {
   var Http = require("http"),
     Iconv = require("iconv-lite"),
     csv = require("csvtojson"),
-    jsonMealContent= require("../../mealContents");
-    console.log(typeof jsonMealContent);
-    //objectMealContent = JSON.parse(jsonMealContent);   
-    
+    ingredientsAndAdditives = require("./labels-for-ingredients-and-additives");
+
 
   function parseData(callback, res) {
     var lines = "";
@@ -77,23 +75,12 @@ var URMDownloader = function() {
   }
 
   function translateContentInformation(contentInformation) {
-      //console.log(contentInformation);
-      //getDictionary();
     for (let i = 0; i < contentInformation.length; i++) {
-        if(jsonMealContent[contentInformation[i]]){
-            contentInformation[i] = jsonMealContent[contentInformation[i]];
-        }
-        else{
-            console.log(contentInformation[i]);
-        }
+      if (ingredientsAndAdditives[contentInformation[i]]) {
+        contentInformation[i] = ingredientsAndAdditives[contentInformation[i]];
+      }
     }
     return contentInformation;
-  }
-    
-  function getDictionary(){
-      //var jsonDictionary = await fetch("./data_class.json");
-      var jsonDictionary = require("../../mealContents")
-      console.log(jsonDictionary);
   }
 
   function get(host, path, callback) {
