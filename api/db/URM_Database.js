@@ -8,12 +8,15 @@ var URMDatabase = function(downloader, Config) {
 
   function save() {
     // TODO: Check why file can not be opened
-    // var fs = require("fs");
-    // fs.writeFile("Config.VotesFile", JSON.stringify(votes));
+    //var fs = require("fs");
+     //fs.writeFile("Config.VotesFile", JSON.stringify(votes));   
   }
 
   function initVotes() {
     votes = require(Config.VotesFile);
+
+    
+      
     menu.forEach(function(item) {
       if (!votes.hasOwnProperty(item.name)) {
         item.id = Object.keys(votes).length + 1;
@@ -38,8 +41,11 @@ var URMDatabase = function(downloader, Config) {
     let stwnoWeekNumber = (new Date()).getWeek(),
       timestamp = parseInt(Date.now() / 1000),
       url = Config.APIPathTemplate;
+    console.log(url)
     url = url.replace("{{stwnoWeekNumber}}", stwnoWeekNumber);
+    console.log(url)
     url = url.replace("{{timestamp}}", timestamp);
+    console.log(url);
     downloader.get(Config.APIHost, url,
       function(data) {
         menu = data;

@@ -5,8 +5,8 @@
   "url": "http://api.regensburger-forscher.de/mensa",
   "scripts": {
     "start": "node api/app.js",
-    "create-certs": "mkdir -p certs && openssl req -nodes -new -x509 -keyout certs/server.key -out certs/server.cert",
-    "postinstall": "mkdir -p data && echo \"{}\" > data/votes.json"
+    "create-certs": "openssl req -nodes -new -x509 -keyout certs/server.key -out certs/server.cert",
+    "postinstall": "echo \"{}\" > data/votes.json"
   },
   "devDependencies": {
     "grunt": "^0.4.5",

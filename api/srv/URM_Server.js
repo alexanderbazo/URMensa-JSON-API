@@ -60,6 +60,8 @@ var URMServer = function(newMsgFactory) {
       key: fs.readFileSync("./certs/server.key"),
       cert: fs.readFileSync("./certs/server.cert"),
     }, app);
+    //console.log(server)
+    //console.log("HIER SERVER")
     server.listen(port);
   }
 
