@@ -5,7 +5,9 @@ var URMDownloader = function() {
 
   var Http = require("http"),
     Iconv = require("iconv-lite"),
-    csv = require("csvtojson");
+    csv = require("csvtojson"),
+    ingredientsAndAdditives = require("./labels-for-ingredients-and-additives");
+
 
   function parseData(callback, res) {
     var lines = "";
@@ -74,16 +76,9 @@ var URMDownloader = function() {
 
   function translateContentInformation(contentInformation) {
     for (let i = 0; i < contentInformation.length; i++) {
-      contentInformation[i] = contentInformation[i] === "1" ? "mit Farbstoff" :
-        contentInformation[i];
-      contentInformation[i] = contentInformation[i] === "2" ?
-        "mit Konservierungsstoff" : contentInformation[i];
-      contentInformation[i] = contentInformation[i] === "3" ?
-        "mit Antioxidationsmittel" : contentInformation[i];
-      contentInformation[i] = contentInformation[i] === "4" ?
-        "mit Geschmacksverstärker" : contentInformation[i];
-      contentInformation[i] = contentInformation[i] === "5" ? "geschwefelt " :
-        contentInformation[i];
+      if (ingredientsAndAdditives[contentInformation[i]]) {
+        contentInformation[i] = ingredientsAndAdditives[contentInformation[i]];
+      }
     }
     return contentInformation;
   }
