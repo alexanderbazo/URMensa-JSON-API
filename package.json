@@ -2,7 +2,7 @@
   "name": "urmensa-csv-2-json",
   "description": "A small node server that provides json formatted menus for the uni canteen ",
   "version": "0.1.0",
-  "url": "http://api.regensburger-forscher.de/mensa",
+  "url": "http://localhost", // TODO: "https://api.regensburger-forscher.de/mensa"
   "scripts": {
     "start": "node api/app.js",
     "create-certs": "mkdir -p certs && openssl req -nodes -new -x509 -keyout certs/server.key -out certs/server.cert",

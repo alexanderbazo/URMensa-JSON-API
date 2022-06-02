@@ -4,6 +4,8 @@
 var URMDatabase = function(downloader, Config) {
 
   var menu = [],
+    othMenu = [],
+    passauMenu = [],
     votes = {};
 
   function save() {
@@ -14,6 +16,7 @@ var URMDatabase = function(downloader, Config) {
 
   function initVotes() {
     votes = require(Config.VotesFile);
+    votes = JSON.parse(votes);
     menu.forEach(function(item) {
       if (!votes.hasOwnProperty(item.name)) {
         item.id = Object.keys(votes).length + 1;
@@ -40,11 +43,30 @@ var URMDatabase = function(downloader, Config) {
       url = Config.APIPathTemplate;
     url = url.replace("{{stwnoWeekNumber}}", stwnoWeekNumber);
     url = url.replace("{{timestamp}}", timestamp);
-    downloader.get(Config.APIHost, url,
-      function(data) {
-        menu = data;
-        initVotes();
-      });
+
+    for (let i = 0; i < Config.LocationCodes.length; i++) {
+      url.replace("UNI-R", Config.LocationCodes[i]);
+
+      downloader.get(Config.APIHost, url, Config.LocationCodes[i],
+        function(data, place) {
+          switch (place) {
+            case "HS-R-tag":
+                othMenu = data;
+                console.log("Got Data for OTH");
+              break;
+            case "UNI-P":
+                passauMenu = data;
+                console.log("Got Data for Passau");
+              break;
+            case "UNI-R": 
+              menu = data;
+              console.log("Got Data for Regensburg");
+              break;
+          }
+          menu = data;
+          initVotes();
+        });
+    }
   }
 
   function filterByDay(day, element) {
@@ -53,6 +75,20 @@ var URMDatabase = function(downloader, Config) {
 
   function getMenuForDay(day) {
     var menuForDay = menu.filter(filterByDay.bind(this, day));
+    return menuForDay;
+  }
+
+  function getMenuForDayAndPlace(day, place) {
+    var menuForDay;
+
+    if (place === "uni") {
+      menuForDay = menu.filter(filterByDay.bind(this, day));
+    } else if (place === "passau") {
+      menuForDay = passauMenu.filter(filterByDay.bind(this, day));
+    } else if (place === "oth") {
+      menuForDay = othMenu.filter(filterByDay.bind(this, day));
+    }
+
     return menuForDay;
   }
 
@@ -105,7 +141,8 @@ var URMDatabase = function(downloader, Config) {
     update: update,
     getMenuForDay: getMenuForDay,
     upvoteElement: upvoteElement,
-    downvoteElement: downvoteElement
+    downvoteElement: downvoteElement,
+    getMenuForDayAndPlace: getMenuForDayAndPlace,
   };
 };
 
