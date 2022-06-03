@@ -3,5 +3,6 @@
 	"Schedule": "0 0 * * *",
 	"VotesFile": "../../data/votes.json",
 	"APIHost": "www.stwno.de", 
-	"APIPathTemplate": "/infomax/daten-extern/csv/UNI-R/{{stwnoWeekNumber}}.csv?t={{timestamp}}"
+	"APIPathTemplate": "/infomax/daten-extern/csv/UNI-R/{{stwnoWeekNumber}}.csv?t={{timestamp}}",
+	"LocationCodes": ["UNI-R", "HS-R-tag", "UNI-P", "Cafeteria-PT"]
 }

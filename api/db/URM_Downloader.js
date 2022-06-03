@@ -52,12 +52,14 @@ var URMDownloader = function() {
     });
   }
 
-  function get(host, path, callback) {
+  function get(host, path, place, callback) {
     Http.get({
       host: host,
       path: path,
       encoding: null,
-    }, parseData.bind(this, callback));
+    }, parseData.bind(this, function(data) {
+      callback(data, place);
+    } ));
   }
 
   return {

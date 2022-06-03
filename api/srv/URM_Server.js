@@ -23,6 +23,7 @@ var URMServer = function(newMsgFactory) {
     }));
 
     app.get("/mensa", function(req, res) {
+      // res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
       res.redirect("http://132.199.139.24/~baa56852/www/mensa/");
     });
 
@@ -45,16 +46,26 @@ var URMServer = function(newMsgFactory) {
     });
 
     app.get("/mensa/uni/*", function(req, res) {
-      let day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") +
-          1, req.originalUrl.length),
+      let day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
         menu = db.getMenuForDay(day);
       res.send(JSON.stringify(menu));
+    });
+
+    app.get("/mensa/*/*", function(req, res) {
+      let day = req.originalUrl.substring(req.originalUrl.lastIndexOf("/") + 1, req.originalUrl.length),
+        place = req.originalUrl.substring(req.originalUrl.substring(1).indexOf("/") + 2, req.originalUrl.lastIndexOf("/")),
+        menu;
+
+        menu = db.getMenuForDayAndPlace(day, place);
+
+        res.send(JSON.stringify(menu));
     });
   }
 
   function start(port, database) {
     let fs = require("fs"),
-      https = require("https");
+      https = require("https"),
+      http = require("http");
     db = database;
     server = https.createServer({
       key: fs.readFileSync("./certs/server.key"),
