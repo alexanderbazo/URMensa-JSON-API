@@ -6,6 +6,7 @@ var URMDatabase = function(downloader, Config) {
   var menu = [],
     othMenu = [],
     passauMenu = [],
+    ptMenu = [],
     votes = {};
 
   function save() {
@@ -41,11 +42,12 @@ var URMDatabase = function(downloader, Config) {
     let stwnoWeekNumber = (new Date()).getWeek(),
       timestamp = parseInt(Date.now() / 1000),
       url = Config.APIPathTemplate;
-    url = url.replace("{{stwnoWeekNumber}}", stwnoWeekNumber);
-    url = url.replace("{{timestamp}}", timestamp);
 
     for (let i = 0; i < Config.LocationCodes.length; i++) {
-      url.replace("UNI-R", Config.LocationCodes[i]);
+      url = Config.APIPathTemplate;
+      url = url.replace("{{stwnoWeekNumber}}", stwnoWeekNumber);
+      url = url.replace("{{timestamp}}", timestamp);
+      url = url.replace("UNI-R", Config.LocationCodes[i]);
 
       downloader.get(Config.APIHost, url, Config.LocationCodes[i],
         function(data, place) {
@@ -62,8 +64,12 @@ var URMDatabase = function(downloader, Config) {
               menu = data;
               console.log("Got Data for Regensburg");
               break;
+            case "Cafeteria-PT":
+              ptMenu = data;
+              console.log("Got data for PT");
+              break;
           }
-          menu = data;
+          // menu = data;
           initVotes();
         });
     }
@@ -87,6 +93,8 @@ var URMDatabase = function(downloader, Config) {
       menuForDay = passauMenu.filter(filterByDay.bind(this, day));
     } else if (place === "oth") {
       menuForDay = othMenu.filter(filterByDay.bind(this, day));
+    } else if (place === "pt") {
+      menuForDay = ptMenu.filter(filterByDay.bind(this, day));
     }
 
     return menuForDay;

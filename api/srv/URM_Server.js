@@ -56,12 +56,7 @@ var URMServer = function(newMsgFactory) {
         place = req.originalUrl.substring(req.originalUrl.substring(1).indexOf("/") + 2, req.originalUrl.lastIndexOf("/")),
         menu;
 
-        console.log(day);
-        console.log(place);
-
         menu = db.getMenuForDayAndPlace(day, place);
-
-        console.log(menu);
 
         res.send(JSON.stringify(menu));
     });

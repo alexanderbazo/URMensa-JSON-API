@@ -1,6 +1,8 @@
 /*eslint-env node */
 "use strict";
 
+/* TODO: "https://api.regensburger-forscher.de/mensa" in package.json*/
+
 (function() {
 
   const Config = require("../config.json"), 
