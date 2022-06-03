@@ -67,8 +67,10 @@ var URMServer = function(newMsgFactory) {
       https = require("https"),
       http = require("http");
     db = database;
-    //TODO: HTTPS
-    server = http.createServer(app);
+    server = https.createServer({
+      key: fs.readFileSync("./certs/server.key"),
+      cert: fs.readFileSync("./certs/server.cert"),
+    }, app);
     server.listen(port);
   }
 
